@@ -1,7 +1,8 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addItem } from './CreatSlice';
-import './ProductList.css'
+import { addItem,updateQuantity } from './CreatSlice';
+import './ProductList.css';
+import Cart from './CartItem';
 function ProductList() {
   
     const plantsArray = [
@@ -235,12 +236,24 @@ function ProductList() {
    const dispatch = useDispatch();
   const cart = useSelector(state => state.cart.items);
    const [addedToCart, setAddedToCart] = useState({});
+   const cartRef = useRef(null);
     const handleAddToCart = (product) => {
       dispatch(addItem(product));
       setAddedToCart((prevState) => ({
          ...prevState,
          [product.name]: true, // Set the product name as key and value as true to indicate it's added to cart
        }));
+    };
+
+    const handleItemRemoved = (product) => {
+        setAddedToCart((prevState) => ({
+          ...prevState,
+          [product.name]: false,
+        }));
+      };
+
+    const handleCartIconClick = () => {
+        cartRef.current.scrollIntoView({ behavior: 'smooth' });
     };
 
     return (
@@ -261,7 +274,7 @@ function ProductList() {
             <div style={styleObjUl}>
                 <div> <a href="#" style={styleA}>Plants</a></div>
                 <div> 
-                    <a href="#" style={styleA}>
+                    <a href="#" style={styleA} onClick={handleCartIconClick}>
                         <h1 className='cart'>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="IconChangeColor" height="68" width="68">
                                 <rect width="156" height="156" fill="none"></rect>
@@ -302,7 +315,9 @@ function ProductList() {
     ))}
 
         </div>
-
+      <div ref={cartRef}>
+        <Cart onContinueShopping={() => setShowProductList(true)} onItemRemoved={handleItemRemoved} />
+      </div>
     </div>
     );
 }

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, updateQuantity } from './CreatSlice';
 import './CartItem.css';
 
-const Cart = ({ onContinueShopping }) => {
+const Cart = ({ onContinueShopping, onItemRemoved }) => {
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
@@ -27,11 +27,13 @@ const Cart = ({ onContinueShopping }) => {
       dispatch(updateQuantity({ ...item, quantity: item.quantity - 1 }));
     } else {
       dispatch(removeItem(item.name));
+      onItemRemoved(item);
     }
   };
 
   const handleRemove = (item) => {
     dispatch(removeItem(item.name));
+    onItemRemoved(item);
   };
 
   const handleCheckoutShopping = (e) => {
@@ -43,6 +45,7 @@ const Cart = ({ onContinueShopping }) => {
   const calculateTotalCost = (item) => {
     return (parseFloat(item.cost.replace('$', '')) * item.quantity).toFixed(2);
   };
+  
 
   return (
     <div className="cart-container">
@@ -56,7 +59,7 @@ const Cart = ({ onContinueShopping }) => {
               <div className="cart-item-cost">{item.cost}</div>
               <div className="cart-item-quantity">
                 <button className="cart-item-button cart-item-button-dec" onClick={() => handleDecrement(item)}>-</button>
-                <span className="cart-item-quantity-value"></span>
+                <span className="cart-item-quantity-value">{item.quantity}</span>
                 <button className="cart-item-button cart-item-button-inc" onClick={() => handleIncrement(item)}>+</button>
               </div>
               <div className="cart-item-total">Total: ${calculateTotalCost(item)}</div>

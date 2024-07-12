@@ -4,7 +4,7 @@ import ProductList from './ProductList';
 import './App.css';
 import AboutUs from './AboutUs';
 import backgroundImage from './assets/potted-plants.jpg';
-import Cart from './CartItem';
+
 
 
 function App() {
@@ -40,7 +40,7 @@ function App() {
       <div className={`product-list-container ${showProductList ? 'visible' : ''}`}>
         <ProductList />
       </div>
-      <Cart onContinueShopping={() => setShowProductList(true)} />
+      
     </div>
   );
 }
